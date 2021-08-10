@@ -22,8 +22,11 @@
             <div class='card-content-key'>HP: <span class='card-content-value'>{{hp}}</span></div>
             <div class='card-content-key'>Attack: <span class='card-content-value'>{{attack}}</span></div>
             <div class='card-content-key'>Defense: <span class='card-content-value'>{{defense}}</span></div>
+            <button class='card-button'>Learn more</button>
           </div>
+
       </div>
+
 
   </article>
 
@@ -48,7 +51,7 @@
     },
     async fetch() {
 
-      
+
 
       this.monster = await fetch(`https://pokeapi.co/api/v2/pokemon/${this.name}`).then(res => res.json());
       const { sprites, stats, types, abilities } = this.monster
@@ -85,6 +88,7 @@
     box-sizing: border-box;
     border-radius: 8px;
     height: 574px;
+    width: 335px;
     box-shadow: none;
   }
 
@@ -95,6 +99,8 @@
     align-self: stretch;
     flex-grow: 0;
     margin: 0px 0px;
+    height: 290px;
+    width: 335px;
   }
 
   .card-info {
@@ -102,7 +108,8 @@
     flex-direction: column;
     align-items: flex-start;
     padding: 40px;
-
+    height: 284px;
+    width: 335px;
     flex: none;
     order: 1;
     align-self: stretch;
@@ -144,6 +151,21 @@
     font-size: 14px;
     line-height: 20px;
 
+  }
+
+  .card-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px 24px;
+    border: 2px solid #5700FF;
+    box-sizing: border-box;
+    border-radius: 22px;
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+    margin: 20px 0px;
+    background: inherit;
   }
 
 </style>
