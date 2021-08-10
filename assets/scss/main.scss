@@ -2,3 +2,16 @@
 // in this file globally
 
 @import 'custom-buefy.scss';
+
+main{
+  font-family: $family-primary;
+  display: block;
+  padding: 40px 20px;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.bg-light {
+  background: #F5F5F5;
+}

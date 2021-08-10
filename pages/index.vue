@@ -1,9 +1,13 @@
 <template>
-  <main>
-    <Card v-for='monster in monsterList'
-          v-bind:name='monster'
-          v-bind:key='monster'
-    />
+
+  <main class='container bg-light'>
+    <PageHeading />
+    <section class=''>
+      <Card v-for='monster in monsterList'
+            v-bind:name='monster'
+            v-bind:key='monster'
+      />
+    </section>
   </main>
 </template>
 

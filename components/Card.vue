@@ -43,8 +43,7 @@
 </script>
 
 <style scoped>
-.image {
-  height: 200px;
-  width: 200px;
+.card {
+  width: 100px;
 }
 </style>
