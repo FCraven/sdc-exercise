@@ -1,5 +1,5 @@
 <template>
-  <section id='page-heading-container'>
+  <section class='container' id='page-heading-container'>
     <h1 class='is-uppercase title'>Pokemon Cards</h1>
     <h2 class='catch-phrase'>Gotta catch 'em all</h2>
   </section>
@@ -7,14 +7,12 @@
 
 <style scoped>
   #page-heading-container {
-    width: 335px;
-    /* height: 76px; */
+    width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-content: flex-start;
     margin-bottom: 40px;
-    padding-bottom: 3px;
   }
   .title {
     font-style: normal;
