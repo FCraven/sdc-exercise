@@ -1,12 +1,20 @@
 <template>
-  <section class='container' id='page-heading-container'>
-    <h1 class='is-uppercase title'>Pokemon Cards</h1>
-    <h2 class='catch-phrase'>Gotta catch 'em all</h2>
+  <section class='container page-heading-container'>
+    <h1 class='is-uppercase title'>{{small}}</h1>
+    <h2 class='catch-phrase'>{{large}}</h2>
   </section>
 </template>
 
+<script>
+ export default {
+   props: ['small', 'large']
+ }
+ //figure out props
+</script>
+
+
 <style scoped>
-  #page-heading-container {
+  .page-heading-container {
     width: 100%;
     display: flex;
     flex-direction: column;

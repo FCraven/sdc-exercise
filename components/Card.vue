@@ -1,7 +1,7 @@
 <template>
 
   <article v-if="$fetchState.pending"
-        class='card container poke-card'>
+        class='poke-card'>
         <!-- IMAGE TOP -->
         <div class="card-image">
           <progress class="progress is-small is-primary" max="100">60%</progress>
@@ -86,7 +86,7 @@
 
 <script>
 
-
+  const { parseTypes, parseAbilities } = require('../utils')
 
   export default {
     props: ['name'],
@@ -101,25 +101,27 @@
         defense: 0
       }
     },
+    fetchOnServer: false,
     async fetch() {
-      
+      const pokeBall = window.localStorage;
+      const savedMonster = pokeBall[this.name]
       try{
-         this.monster = await fetch(`https://pokeapi.co/api/v2/pokemon/${this.name}`).then(res => res.json());
+        if(savedMonster){
+          this.monster = JSON.parse(pokeBall.getItem(this.name))
+        } else {
+            this.monster = await fetch(`https://pokeapi.co/api/v2/pokemon/${this.name}`).then(res => res.json());
+            pokeBall.setItem(this.name, JSON.stringify(this.monster));
+        }
       } catch(err) {
-          next(err)
+          next(err);
       }
 
-      const capitalize =( str )=> str[0].toUpperCase() + str.slice(1);
-
-      const { sprites, stats, types, abilities } = this.monster
-      const { front_default } = sprites.other['official-artwork']
+      const { sprites, stats, types, abilities } = this.monster;
+      const { front_default } = sprites.other['official-artwork'];
 
       this.imageUrl = front_default;
-      this.abilities = abilities.reduce((accum, el, index) => {
-        let formattedAbility = el.ability.name.split('-').map(el => capitalize(el)).join(' ')
-        return index === abilities.length - 1? accum + formattedAbility : accum + formattedAbility + ', ' ;
-      },'')
-      this.types = types.map(el => capitalize(el.type.name)).join(', ');
+      this.abilities = parseAbilities(abilities)
+      this.types = parseTypes(types);
       this.hp = stats.find(el => el.stat.name === 'hp').base_stat || 0;
       this.attack = stats.find(el => el.stat.name === 'attack').base_stat || 0;
       this.defense = stats.find(el => el.stat.name === 'defense').base_stat || 0;
