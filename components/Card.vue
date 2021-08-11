@@ -1,5 +1,44 @@
 <template>
-  <p v-if="$fetchState.pending" class='is-loading'>Loading...</p>
+
+  <article v-if="$fetchState.pending"
+        class='card container poke-card'>
+        <!-- IMAGE TOP -->
+        <div class="card-image">
+          <progress class="progress is-small is-primary" max="100">60%</progress>
+        </div>
+
+        <!-- INFO - TITLE & COPY -->
+        <div class="card-info">
+            <div class="card-content">
+
+              <h3 class='card-title'>Loading...</h3>
+
+              <div class='card-content-key'>Abilities:
+                <span class='card-content-value'>...</span>
+              </div>
+              <div class='card-content-key'>Types:
+                <span class='card-content-value'>...</span>
+              </div>
+              <div class='card-content-key'>HP:
+                <span class='card-content-value'>...</span>
+              </div>
+              <div class='card-content-key'>Attack:
+                <span class='card-content-value'>...</span>
+              </div>
+              <div class='card-content-key'>Defense:
+                <span class='card-content-value'>...</span>
+              </div>
+
+              <NuxtLink :to="`/${monster.name}`">
+                <button class='card-button'> Learn more </button>
+              </NuxtLink>
+
+            </div>
+
+        </div>
+
+  </article>
+
   <p v-else-if="$fetchState.error">An error occurred :(</p>
 
   <article v-else
@@ -13,17 +52,32 @@
       <!-- INFO - TITLE & COPY -->
        <div class="card-info">
           <div class="card-content">
+
             <h3 class='card-title'>{{monster.name[0].toUpperCase() + monster.name.slice(1)}}</h3>
-            <div class='card-content-key'>Abilities: <span class='card-content-value'>{{abilities}}</span></div>
-            <div class='card-content-key'>Types: <span class='card-content-value'>{{types}}</span></div>
-            <div class='card-content-key'>HP: <span class='card-content-value'>{{hp}}</span></div>
-            <div class='card-content-key'>Attack: <span class='card-content-value'>{{attack}}</span></div>
-            <div class='card-content-key'>Defense: <span class='card-content-value'>{{defense}}</span></div>
-            <button class='card-button'>Learn more</button>
+
+            <div class='card-content-key'>Abilities:
+              <span class='card-content-value'>{{abilities}}</span>
+            </div>
+            <div class='card-content-key'>Types:
+              <span class='card-content-value'>{{types}}</span>
+            </div>
+            <div class='card-content-key'>HP:
+              <span class='card-content-value'>{{hp}}</span>
+            </div>
+            <div class='card-content-key'>Attack:
+              <span class='card-content-value'>{{attack}}</span>
+            </div>
+            <div class='card-content-key'>Defense:
+              <span class='card-content-value'>{{defense}}</span>
+            </div>
+
+            <NuxtLink :to="`/${monster.name}`">
+              <button class='card-button'> Learn more </button>
+            </NuxtLink>
+
           </div>
 
       </div>
-
 
   </article>
 
@@ -171,6 +225,15 @@
     flex-grow: 0;
     margin: 20px 0px;
     background: inherit;
+    color: #5700FF;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 20px;
+    text-align: center;
+    font-feature-settings: 'liga' off;
   }
+
+
 
 </style>
