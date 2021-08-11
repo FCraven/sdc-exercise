@@ -24,7 +24,7 @@
     height: 100%;
     display: flex;
     flex-flow: column nowrap;
-    justify-content: flex-start;
+    align-items: center;
   }
 
   @media only screen and (min-width: 376px) {
@@ -35,7 +35,7 @@
     }
   }
 
-  @media only screen and (min-width: 1000px) {
+  @media only screen and (min-width: 1225px) {
     .card-container {
       justify-content: space-between;
     }
