@@ -7,16 +7,13 @@
 
        <!-- IMAGE TOP -->
        <div class="card-image">
-         <figure class="image bg-med">
-          <img v-bind:src="imageUrl"
-              class='card-img' />
-         </figure>
+        <img class='card-img' :src='imageUrl' />
        </div>
 
       <!-- INFO - TITLE & COPY -->
        <div class="card-info">
-          <h3 class='card-title'>{{monster.name[0].toUpperCase() + monster.name.slice(1)}}</h3>
           <div class="card-content">
+            <h3 class='card-title'>{{monster.name[0].toUpperCase() + monster.name.slice(1)}}</h3>
             <div class='card-content-key'>Abilities: <span class='card-content-value'>{{abilities}}</span></div>
             <div class='card-content-key'>Types: <span class='card-content-value'>{{types}}</span></div>
             <div class='card-content-key'>HP: <span class='card-content-value'>{{hp}}</span></div>
@@ -51,8 +48,6 @@
     },
     async fetch() {
 
-
-
       this.monster = await fetch(`https://pokeapi.co/api/v2/pokemon/${this.name}`).then(res => res.json());
       const { sprites, stats, types, abilities } = this.monster
       const { front_default } = sprites.other['official-artwork']
@@ -72,16 +67,11 @@
 
 <style scoped>
 
-  img, figure {
-    border-top-left-radius: inherit;
-    border-top-right-radius: inherit;
-  }
-
   .poke-card {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    padding: 0px;
+    padding: 0;
     margin-bottom: 24px;
     background: #FFFFFF;
     border: 2px inset rgba(0,0,0,0.04);
@@ -93,7 +83,9 @@
   }
 
   .card-image {
-    border-radius: inherit;
+    border-top-left-radius: inherit;
+    border-top-right-radius: inherit;
+
     flex: none;
     order: 0;
     align-self: stretch;
@@ -101,13 +93,19 @@
     margin: 0px 0px;
     height: 290px;
     width: 335px;
+    background: #E0E0E0;
+  }
+
+  .card-img {
+    height: 100%;
+    width: 100%;
   }
 
   .card-info {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    padding: 40px;
+    padding: 20px 40px 40px 40px;
     height: 284px;
     width: 335px;
     flex: none;
@@ -115,6 +113,8 @@
     align-self: stretch;
     flex-grow: 0;
     margin: 0px 0px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
   }
 
   .card-title {
@@ -143,6 +143,8 @@
     flex-grow: 0;
     margin: 12px 0px;
     padding: 0;
+    height: 100px;
+    width: 255px;
   }
 
   .card-content-value {
