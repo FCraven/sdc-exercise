@@ -94,11 +94,14 @@
     height: 290px;
     width: 335px;
     background: #E0E0E0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .card-img {
     height: 100%;
-    width: 100%;
+    width: auto;
   }
 
   .card-info {
