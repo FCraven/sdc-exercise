@@ -102,19 +102,24 @@
       }
     },
     async fetch() {
+      
       try{
          this.monster = await fetch(`https://pokeapi.co/api/v2/pokemon/${this.name}`).then(res => res.json());
       } catch(err) {
-        next(err)
+          next(err)
       }
+
+      const capitalize =( str )=> str[0].toUpperCase() + str.slice(1);
+
       const { sprites, stats, types, abilities } = this.monster
       const { front_default } = sprites.other['official-artwork']
+
       this.imageUrl = front_default;
       this.abilities = abilities.reduce((accum, el, index) => {
-        let formattedAbility = el.ability.name.split('-').map(el => el[0].toUpperCase() + el.slice(1)).join(' ')
+        let formattedAbility = el.ability.name.split('-').map(el => capitalize(el)).join(' ')
         return index === abilities.length - 1? accum + formattedAbility : accum + formattedAbility + ', ' ;
       },'')
-      this.types = types.map(el => el.type.name[0].toUpperCase() + el.type.name.slice(1)).join(', ');
+      this.types = types.map(el => capitalize(el.type.name)).join(', ');
       this.hp = stats.find(el => el.stat.name === 'hp').base_stat || 0;
       this.attack = stats.find(el => el.stat.name === 'attack').base_stat || 0;
       this.defense = stats.find(el => el.stat.name === 'defense').base_stat || 0;

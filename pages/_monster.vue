@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>{{monster}}</h1>
+    <h1>{{monsterName}}</h1>
     <NuxtLink to="/">
           <button class='back-button'> Back </button>
     </NuxtLink>
@@ -10,10 +10,18 @@
 <script>
 
   export default {
+    data() {
+      return {
+        monster: {}
+      }
+    },
     async asyncData({route}) {
       return {
-        monster: route.params.monster
+        monsterName: route.params.monster
       }
+    },
+    async fetch() {
+      const data = await fetch()
     }
   }
 
