@@ -42,7 +42,8 @@
   <p v-else-if="$fetchState.error">An error occurred :(</p>
 
   <article v-else
-       class='card container poke-card'>
+       class='poke-card'>
+       <!-- add card and container classes to above class if cards get wonky -->
 
        <!-- IMAGE TOP -->
        <div class="card-image">
@@ -101,8 +102,11 @@
       }
     },
     async fetch() {
-
-      this.monster = await fetch(`https://pokeapi.co/api/v2/pokemon/${this.name}`).then(res => res.json());
+      try{
+         this.monster = await fetch(`https://pokeapi.co/api/v2/pokemon/${this.name}`).then(res => res.json());
+      } catch(err) {
+        next(err)
+      }
       const { sprites, stats, types, abilities } = this.monster
       const { front_default } = sprites.other['official-artwork']
       this.imageUrl = front_default;
@@ -132,7 +136,7 @@
     box-sizing: border-box;
     border-radius: 8px;
     height: 574px;
-    width: 335px;
+    max-width: 335px;
     box-shadow: none;
   }
 

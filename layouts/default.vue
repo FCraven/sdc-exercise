@@ -2,7 +2,7 @@
   <div>
     <site-navbar />
     <div class="has-background-light">
-      <Nuxt />
+      <Nuxt keep-alive/>
     </div>
     <site-footer />
   </div>

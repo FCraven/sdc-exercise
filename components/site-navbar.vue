@@ -47,7 +47,7 @@
               type="is-primary"
               size="is-medium"
             >
-              Am I A Candidate?
+              Am I a candidate?
             </b-button>
           </div>
 
@@ -57,7 +57,7 @@
               size="is-small"
               type="is-text"
             >
-              Am I A Candidate?
+              Am I a candidate?
             </b-button>
 
             <!-- Fake menu button -->
