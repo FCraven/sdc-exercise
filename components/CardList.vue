@@ -24,15 +24,14 @@
     height: 100%;
     display: flex;
     flex-flow: column nowrap;
-    justify-content: center;
-    align-items: flex-start;
+    justify-content: flex-start;
   }
 
   @media only screen and (min-width: 376px) {
     .card-container {
       flex-flow: row wrap;
       justify-content: space-around;
-      align-items: center;
+      align-items: flex-start;
     }
   }
 
