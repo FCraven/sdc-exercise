@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>{{character}}</h1>
+    <h1>{{monster}}</h1>
     <NuxtLink to="/">
           <button class='back-button'> Back </button>
     </NuxtLink>
@@ -12,7 +12,7 @@
   export default {
     async asyncData({route}) {
       return {
-        character: route.params.character
+        monster: route.params.monster
       }
     }
   }
