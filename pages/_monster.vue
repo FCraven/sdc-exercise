@@ -14,7 +14,7 @@
           </div>
 
         <div class="tile is-ancestor ml-4 is-mobile p-3">
-          <div v-for='stat in stats' :key='stat.base_stat' class="stat tile is-2">
+          <div v-for='stat in stats' :key='stat.stat.name' class="stat tile is-2">
             <!-- Add content or other tiles -->
             <p class="heading">{{stat.stat.name}}</p>
               <p class="title">{{stat.base_stat}}</p>
@@ -23,6 +23,12 @@
       </div>
     </section>
 
+    <!-- inaert level here with evolution chain -->
+    <nav class="breadcrumb is-size-4 p-3 is-centered" aria-label="breadcrumbs">
+      <ul class=''>
+        <li class='is-size-6-mobile' v-for='form in evolutionChainArray' :form='form' :key='form'>{{form[0].toUpperCase() + form.slice(1)}}</li>
+      </ul>
+    </nav>
 
     <div class='content'>
      <p>{{flavorText}}</p>
@@ -45,7 +51,8 @@ import { capitalize, parseTypes } from '../utils'
         monster: {},
         typesList: '',
         speciesInfo: {},
-        evolutionChain: {},
+        evolutionChainData: {},
+        evolutionChainArray: [],
         flavorText: '',
         growthRate: '',
         stats: []
@@ -80,7 +87,7 @@ import { capitalize, parseTypes } from '../utils'
 
       try {
           this.speciesInfo = await fetch(speciesUrl).then(res => res.json())
-          this.evolutionChain = await fetch(this.speciesInfo.evolution_chain.url).then(res => res.json()).then(data => data.chain)
+          this.evolutionChainData = await fetch(this.speciesInfo.evolution_chain.url).then(res => res.json()).then(data => data.chain)
 
 
       } catch(err) {
@@ -101,11 +108,25 @@ import { capitalize, parseTypes } from '../utils'
           }
         }
         return Object.keys(textObj).join(' ')
-
       }
+
+
+      const forms = []
+      const createEvolutionChain =(chain)=> {
+        forms.push(chain.species.name);
+        while(chain.evolves_to.length)  {
+            chain = chain.evolves_to[0]
+            createEvolutionChain(chain);
+          }
+         return [...new Set(forms)]
+      }
+
       this.flavorText = createFlavorText(this.speciesInfo.flavor_text_entries)
       this.growthRate = this.speciesInfo.growth_rate.name;
       this.stats = this.monster.stats;
+      this.evolutionChainArray = createEvolutionChain(this.evolutionChainData)
+
+      console.log('evo array-> ', this.evolutionChainArray)
     }
 
   }
@@ -167,16 +188,6 @@ import { capitalize, parseTypes } from '../utils'
     backdrop-filter: blur(5px);
   }
 
-  /* .stats {
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: space-between;
-    align-items: space-evenly;
-    padding-bottom: 20px;
-    width: 100%;
-    border: 3px solid blue;
-  } */
-
   .stat {
     display: flex;
     flex-flow: column nowrap;
@@ -186,7 +197,7 @@ import { capitalize, parseTypes } from '../utils'
   }
 
   .hero-bg-img {
-    background-position: center, 75% 50%;
+    background-position: center, 80% 50%;
     background-repeat: no-repeat, no-repeat;
     background-size: 100%, 50%;
   }
@@ -201,16 +212,22 @@ import { capitalize, parseTypes } from '../utils'
 
   @media only screen and (max-width: 768px) {
     .stat {
-      flex-flow: row ;
+      flex-direction: row;
     }
 
     .hero-bg-img {
-      background-position: center, 75px 20px;
-      background-size: 100%, 100%;
-
+      background-position: center,;
+      background-size: 100%, 80%;
     }
   }
 
+
+  @media only screen and (max-width: 440px) {
+    .hero-bg-img {
+        background-position: center, 75px 20px;
+        background-size: 100%, cover;
+      }
+  }
 
 
 </style>
