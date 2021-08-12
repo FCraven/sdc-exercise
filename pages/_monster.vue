@@ -1,41 +1,48 @@
 <template>
   <main class='container bg-light'>
 
-    <section class='hero hero-bg-img mb-4' :style="`backgroundImage: linear-gradient(to top, white, white, rgba(255,255,255,0.25),transparent, transparent), url(${this.monster.sprites.front_default})`">
+    <section class='hero hero-bg-img mb-4' :style="`backgroundImage: linear-gradient(to top, white, white, rgba(255,255,255,0.25),transparent, transparent), url(${imageUrl})`">
       <div class='hero-blur p-4'>
-
         <PageHeading :small="'Type: ' + typesList" :large='titleName' />
-
-         <div class="tile is-ancestor ml-4 is-mobile p-3">
-            <div class='tile is-4' >
-                <p class="heading">Growth Rate</p>
-                  <p class="title">{{growthRate}}</p>
-            </div>
-          </div>
-
         <div class="tile is-ancestor ml-4 is-mobile p-3">
-          <div v-for='stat in stats' :key='stat.stat.name' class="stat tile is-2">
+          <div v-for='stat in stats' :key='stat.stat.name' class="stat tile is-2 ">
             <!-- Add content or other tiles -->
-            <p class="heading">{{stat.stat.name}}</p>
-              <p class="title">{{stat.base_stat}}</p>
+            <p class="heading is-size-7-touch is-size-6-desktop">{{stat.stat.name}}</p>
+              <p class="title is-size-7-touch is-size-6-desktop">{{stat.base_stat}}</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- inaert level here with evolution chain -->
-    <nav class="breadcrumb is-size-4 p-3 is-centered" aria-label="breadcrumbs">
-      <ul class=''>
-        <li class='is-size-6-mobile' v-for='form in evolutionChainArray' :form='form' :key='form'>{{form[0].toUpperCase() + form.slice(1)}}</li>
-      </ul>
-    </nav>
+  <hr />
 
-    <div class='content'>
-     <p>{{flavorText}}</p>
+    <div class='evolution-container'>
+
+      <nav class="level">
+        <div class="level-item has-text-centered">
+          <div class='is-flex is-justify-content-center is-align-items-baseline'>
+            <p class="heading p-1 is-size-7 is-size-6-tablet is-size-5-desktop">Growth Rate</p>
+            <p class="title p-1 is-size-7 is-size-6-tablet is-size-5-desktop">{{growthRate.toUpperCase()}}</p>
+          </div>
+        </div>
+      </nav>
+
+      <nav class="breadcrumb is-centered has-arrow-separator " aria-label="breadcrumbs">
+        <ul class=''>
+          <li class='is-size-6 is-size-5-tablet is-size-4-desktop' v-for='form in evolutionChainArray' :form='form' :key='form'>{{form[0].toUpperCase() + form.slice(1)}}</li>
+        </ul>
+      </nav>
+
+    </div>
+
+<hr />
+
+    <div class='content px-2'>
+     <p class='is-size-4-desktop'>{{flavorText}}</p>
     </div>
 
     <NuxtLink to="/">
-          <button class='back-button'> Back </button>
+          <button class='outline-button'> Back </button>
     </NuxtLink>
   </main>
 </template>
@@ -55,7 +62,8 @@ import { capitalize, parseTypes } from '../utils'
         evolutionChainArray: [],
         flavorText: '',
         growthRate: '',
-        stats: []
+        stats: [],
+        imageUrl: ''
       }
     },
     async asyncData({route}) {
@@ -69,8 +77,8 @@ import { capitalize, parseTypes } from '../utils'
 
     async fetch() {
 
+      //LOAD OR FETCH MONSTER
       const savedMonster = localStorage.getItem(this.monsterName)
-
       if(!savedMonster){
         try{
             this.monster = await fetch(`https://pokeapi.co/api/v2/pokemon/${this.monsterName}`).then(res => res.json());
@@ -82,6 +90,10 @@ import { capitalize, parseTypes } from '../utils'
         }
 
       this.monster = JSON.parse(savedMonster)
+
+
+      this.imageUrl = this.monster.sprites.front_default;
+
       const { types } = this.monster;
       const { url: speciesUrl } = this.monster.species
 
@@ -98,11 +110,12 @@ import { capitalize, parseTypes } from '../utils'
 
       const createFlavorText =(arr)=> {
         const rawTextEntries = arr.slice(0,7);
-        const textObj = {}
+        const textObj = {};
+
         for(const entry of rawTextEntries) {
           const language = entry.language.name;
           const text = entry.flavor_text;
-          let newText = text.replace(/(\r\n|\n|\r)/gm, ' ')
+          let newText = text.replace(/(\r\n|\n|\r)/gm, ' ');
           if(language === 'en' && !textObj[newText]) {
             textObj[newText] = true;
           }
@@ -137,62 +150,11 @@ import { capitalize, parseTypes } from '../utils'
 </script>
 
 <style scoped>
-  .back-button {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 12px 24px;
-      border: 2px solid #5700FF;
-      box-sizing: border-box;
-      border-radius: 22px;
-      flex: none;
-      order: 1;
-      flex-grow: 0;
-      margin: 20px 0px;
-      background: inherit;
-      color: #5700FF;
-      font-style: normal;
-      font-weight: 600;
-      font-size: 14px;
-      line-height: 20px;
-      text-align: center;
-      font-feature-settings: 'liga' off;
-    }
-
-     #page-heading-container {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-content: flex-start;
-    margin-bottom: 40px;
-  }
-  .title {
-    font-style: normal;
-    font-weight: 900;
-    font-size: 12px;
-    line-height: 12px;
-    letter-spacing: 1px;
-    font-feature-settings: 'liga' off;
-    color: #000000;
-  }
-
-  .catch-phrase {
-    font-style: normal;
-    font-weight: 900;
-    font-size: 36px;
-    line-height: 44px;
-    letter-spacing: -1px;
-    font-feature-settings: 'liga' off, 'kern' off;
-    color: #000000;
-    backdrop-filter: blur(5px);
-  }
-
   .stat {
     display: flex;
     flex-flow: column nowrap;
     justify-content: flex-start;
-    align-items: flex-start;
+    align-items: baseline;
     height: 100%;
   }
 
@@ -200,6 +162,13 @@ import { capitalize, parseTypes } from '../utils'
     background-position: center, 80% 50%;
     background-repeat: no-repeat, no-repeat;
     background-size: 100%, 50%;
+  }
+
+  .evolution-container {
+    display: flex;
+    flex-direction: column;
+    justify-content:flex-end;
+    align-items: center;
   }
 
   .hero-blur {
@@ -210,6 +179,16 @@ import { capitalize, parseTypes } from '../utils'
     backdrop-filter: blur(1px);
   }
 
+  @media only screen and (min-width: 769px) {
+      .evolution-container {
+        flex-direction: row;
+        justify-content: space-evenly;
+        align-items: baseline;
+      }
+  }
+
+
+
   @media only screen and (max-width: 768px) {
     .stat {
       flex-direction: row;
@@ -219,6 +198,8 @@ import { capitalize, parseTypes } from '../utils'
       background-position: center,;
       background-size: 100%, 80%;
     }
+
+
   }
 
 

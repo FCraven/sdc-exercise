@@ -12,6 +12,55 @@ main{
   width: 100%;
 }
 
+hr {
+  width: 100%;
+  border: 1px solid $primary;
+
+}
+
+.title {
+  font-style: normal;
+  font-weight: 900;
+  font-size: 12px;
+  line-height: 12px;
+  letter-spacing: 1px;
+  font-feature-settings: 'liga' off;
+  color: #000000;
+}
+
+.catch-phrase {
+  font-style: normal;
+  font-weight: 900;
+  font-size: 36px;
+  line-height: 44px;
+  letter-spacing: -1px;
+  font-feature-settings: 'liga' off, 'kern' off;
+  color: #000000;
+  backdrop-filter: blur(5px);
+}
+
+.outline-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 24px;
+  border: 2px solid #5700FF;
+  box-sizing: border-box;
+  border-radius: 22px;
+  flex: none;
+  order: 1;
+  flex-grow: 0;
+  margin: 20px 0px;
+  background: inherit;
+  color: #5700FF;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  font-feature-settings: 'liga' off;
+}
+
 .bg-light {
   background: #F5F5F5;
 }
