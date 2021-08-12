@@ -39,7 +39,27 @@
 
   </article>
 
-  <p v-else-if="$fetchState.error">An error occurred :(</p>
+  <article v-else-if="$fetchState.error" class='poke-card'>
+        <div class="card-image">
+          <img class='error-img card-img' :src='errorUrl' />
+        </div>
+
+        <!-- INFO - TITLE & COPY -->
+        <div class="card-info">
+            <div class="card-content">
+
+              <h3 class='card-title'>There was an error freeing your monster from the PokeBall!</h3>
+
+              <NuxtLink to="/">
+                <button class='outline-button'>Try Again</button>
+              </NuxtLink>
+
+            </div>
+
+        </div>
+
+
+  </article>
 
   <article v-else
        class='poke-card'>
@@ -94,6 +114,7 @@
       return {
         monster: {},
         imageUrl: '',
+        errorUrl: 'http://www.pngmart.com/files/2/Pokeball-PNG-Photos.png',
         abilities: '',
         types: '',
         hp: 0,
@@ -108,12 +129,9 @@
       try{
         if(savedMonster){
           this.monster = JSON.parse(pokeBall.getItem(this.name))
-          console.log('from localStorage')
         } else {
-          console.log('fetching ' + this.name)
             this.monster = await fetch(`https://pokeapi.co/api/v2/pokemon/${this.name}`).then(res => res.json());
             pokeBall.setItem(this.name, JSON.stringify(this.monster));
-
         }
       } catch(err) {
           console.log(err);
@@ -226,7 +244,9 @@
 
   }
 
- 
+.error-img {
+  height: 75%;
+}
 
 
 

@@ -10,3 +10,18 @@ export const parseAbilities =(abilities)=> {
     return index === abilities.length - 1? accum + formattedAbility : accum + formattedAbility + ', ' ;
   },'');
 }
+
+export const createFlavorText =(arr)=> {
+  const rawTextEntries = arr.slice(0,7);
+  const textObj = {};
+
+  for(const entry of rawTextEntries) {
+    const language = entry.language.name;
+    const text = entry.flavor_text;
+    let newText = text.replace(/(\r\n|\n|\r)/gm, ' ');
+    if(language === 'en' && !textObj[newText]) {
+      textObj[newText] = true;
+    }
+  }
+  return Object.keys(textObj).join(' ')
+}

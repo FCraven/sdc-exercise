@@ -49,10 +49,9 @@
 
 <script>
 
-import { capitalize, parseTypes } from '../utils'
+  import { capitalize, parseTypes, createFlavorText } from '../utils'
 
   export default {
-
     data() {
       return {
         monster: {},
@@ -72,11 +71,8 @@ import { capitalize, parseTypes } from '../utils'
         monsterName: route.params.monster
       }
     },
-
     fetchOnServer: false,
-
     async fetch() {
-
       //LOAD OR FETCH MONSTER
       const savedMonster = localStorage.getItem(this.monsterName)
       if(!savedMonster){
@@ -88,65 +84,38 @@ import { capitalize, parseTypes } from '../utils'
             console.log(err)
           }
         }
-
       this.monster = JSON.parse(savedMonster)
 
-
-      this.imageUrl = this.monster.sprites.front_default;
-
+      //USE MONSTER INFO
       const { types } = this.monster;
       const { url: speciesUrl } = this.monster.species
+      const forms = []
 
+      //GET SPECIES INFO TO GET EVOLUTION CHAIN
       try {
           this.speciesInfo = await fetch(speciesUrl).then(res => res.json())
           this.evolutionChainData = await fetch(this.speciesInfo.evolution_chain.url).then(res => res.json()).then(data => data.chain)
-
-
       } catch(err) {
-          console.log(err)
+        console.log(err)
       }
 
-      this.typesList = parseTypes(types)
-
-      const createFlavorText =(arr)=> {
-        const rawTextEntries = arr.slice(0,7);
-        const textObj = {};
-
-        for(const entry of rawTextEntries) {
-          const language = entry.language.name;
-          const text = entry.flavor_text;
-          let newText = text.replace(/(\r\n|\n|\r)/gm, ' ');
-          if(language === 'en' && !textObj[newText]) {
-            textObj[newText] = true;
-          }
-        }
-        return Object.keys(textObj).join(' ')
-      }
-
-
-      const forms = []
       const createEvolutionChain =(chain)=> {
         forms.push(chain.species.name);
         while(chain.evolves_to.length)  {
-            chain = chain.evolves_to[0]
+          chain = chain.evolves_to[0]
             createEvolutionChain(chain);
           }
          return [...new Set(forms)]
       }
 
+      this.imageUrl = this.monster.sprites.front_default;
+      this.typesList = parseTypes(types)
       this.flavorText = createFlavorText(this.speciesInfo.flavor_text_entries)
       this.growthRate = this.speciesInfo.growth_rate.name;
       this.stats = this.monster.stats;
       this.evolutionChainArray = createEvolutionChain(this.evolutionChainData)
-
-      console.log('evo array-> ', this.evolutionChainArray)
     }
-
   }
-
-
-
-
 </script>
 
 <style scoped>
@@ -187,8 +156,6 @@ import { capitalize, parseTypes } from '../utils'
       }
   }
 
-
-
   @media only screen and (max-width: 768px) {
     .stat {
       flex-direction: row;
@@ -198,8 +165,6 @@ import { capitalize, parseTypes } from '../utils'
       background-position: center,;
       background-size: 100%, 80%;
     }
-
-
   }
 
 
@@ -209,6 +174,4 @@ import { capitalize, parseTypes } from '../utils'
         background-size: 100%, cover;
       }
   }
-
-
 </style>
