@@ -1,9 +1,33 @@
 <template>
   <main class='container bg-light'>
-    <PageHeading :small="'Types: ' + typesList" :large='titleName' />
-    <ul>
-      <li v-for='ability in monster.abilities' v-bind:key='ability.ability.name'>{{ability.ability.name}}</li>
-      </ul>
+
+    <section class='hero hero-bg-img mb-4' :style="`backgroundImage: linear-gradient(to top, white, white, rgba(255,255,255,0.25),transparent, transparent), url(${this.monster.sprites.front_default})`">
+      <div class='hero-blur p-4'>
+
+        <PageHeading :small="'Types: ' + typesList" :large='titleName' />
+
+         <div class="tile is-ancestor ml-4 is-mobile p-3">
+            <div class='tile is-4' >
+                <p class="heading">Growth Rate</p>
+                  <p class="title">{{growthRate}}</p>
+            </div>
+          </div>
+
+        <div class="tile is-ancestor ml-4 is-mobile p-3">
+          <div v-for='stat in stats' :key='stat.base_stat' class="stat tile is-2">
+            <!-- Add content or other tiles -->
+            <p class="heading">{{stat.stat.name}}</p>
+              <p class="title">{{stat.base_stat}}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <div class='content'>
+     <p>{{flavorText}}</p>
+    </div>
+
     <NuxtLink to="/">
           <button class='back-button'> Back </button>
     </NuxtLink>
@@ -15,39 +39,79 @@
 import { capitalize, parseTypes } from '../utils'
 
   export default {
+
     data() {
       return {
         monster: {},
-        typesList: ''
+        typesList: '',
+        speciesInfo: {},
+        evolutionChain: {},
+        flavorText: '',
+        growthRate: '',
+        stats: []
       }
     },
     async asyncData({route}) {
       return {
-        monsterName: route.params.monster,
-        titleName: capitalize(route.params.monster)
+        titleName: capitalize(route.params.monster),
+        monsterName: route.params.monster
       }
     },
+
     fetchOnServer: false,
+
     async fetch() {
-      const pokeBall = window.localStorage;
-      const savedMonster = pokeBall[this.monsterName]
-      //GET MONSTER FROM POKEBALL OR API
-      if(savedMonster){
-        this.monster = JSON.parse(pokeBall.getItem(this.monsterName))
-      } else {
-          try{
+
+      const savedMonster = localStorage.getItem(this.monsterName)
+
+      if(!savedMonster){
+        try{
             this.monster = await fetch(`https://pokeapi.co/api/v2/pokemon/${this.monsterName}`).then(res => res.json());
-            pokeball.setItem(this.monsterName, JSON.stringify(this.monster))
+            localStorage.setItem(this.monsterName, JSON.stringify(this.monster))
+            return
           } catch(err) {
-              next(err)
+            console.log(err)
           }
+        }
+
+      this.monster = JSON.parse(savedMonster)
+      const { types } = this.monster;
+      const { url: speciesUrl } = this.monster.species
+
+      try {
+          this.speciesInfo = await fetch(speciesUrl).then(res => res.json())
+          this.evolutionChain = await fetch(this.speciesInfo.evolution_chain.url).then(res => res.json()).then(data => data.chain)
+
+
+      } catch(err) {
+          console.log(err)
       }
 
-      const { abilities, types } = this.monster
-
       this.typesList = parseTypes(types)
+
+      const createFlavorText =(arr)=> {
+        const rawTextEntries = arr.slice(0,7);
+        const textObj = {}
+        for(const entry of rawTextEntries) {
+          const language = entry.language.name;
+          const text = entry.flavor_text;
+          let newText = text.replace(/(\r\n|\n|\r)/gm, ' ')
+          if(language === 'en' && !textObj[newText]) {
+            textObj[newText] = true;
+          }
+        }
+        return Object.keys(textObj).join(' ')
+
+      }
+      this.flavorText = createFlavorText(this.speciesInfo.flavor_text_entries)
+      this.growthRate = this.speciesInfo.growth_rate.name;
+      this.stats = this.monster.stats;
     }
+
   }
+
+
+
 
 </script>
 
@@ -100,6 +164,53 @@ import { capitalize, parseTypes } from '../utils'
     letter-spacing: -1px;
     font-feature-settings: 'liga' off, 'kern' off;
     color: #000000;
+    backdrop-filter: blur(5px);
   }
+
+  /* .stats {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    align-items: space-evenly;
+    padding-bottom: 20px;
+    width: 100%;
+    border: 3px solid blue;
+  } */
+
+  .stat {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    height: 100%;
+  }
+
+  .hero-bg-img {
+    background-position: center, 75% 50%;
+    background-repeat: no-repeat, no-repeat;
+    background-size: 100%, 50%;
+  }
+
+  .hero-blur {
+    height: 100%;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    backdrop-filter: blur(1px);
+  }
+
+  @media only screen and (max-width: 768px) {
+    .stat {
+      flex-flow: row ;
+    }
+
+    .hero-bg-img {
+      background-position: center, 75px 20px;
+      background-size: 100%, 100%;
+
+    }
+  }
+
+
 
 </style>

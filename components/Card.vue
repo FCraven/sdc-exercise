@@ -98,7 +98,7 @@
         types: '',
         hp: 0,
         attack: 0,
-        defense: 0
+        defense: 0,
       }
     },
     fetchOnServer: false,
@@ -108,12 +108,15 @@
       try{
         if(savedMonster){
           this.monster = JSON.parse(pokeBall.getItem(this.name))
+          console.log('from localStorage')
         } else {
+          console.log('fetching ' + this.name)
             this.monster = await fetch(`https://pokeapi.co/api/v2/pokemon/${this.name}`).then(res => res.json());
             pokeBall.setItem(this.name, JSON.stringify(this.monster));
+
         }
       } catch(err) {
-          next(err);
+          console.log(err);
       }
 
       const { sprites, stats, types, abilities } = this.monster;
