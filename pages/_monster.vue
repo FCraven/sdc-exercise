@@ -4,7 +4,7 @@
     <section class='hero hero-bg-img mb-4' :style="`backgroundImage: linear-gradient(to top, white, white, rgba(255,255,255,0.25),transparent, transparent), url(${this.monster.sprites.front_default})`">
       <div class='hero-blur p-4'>
 
-        <PageHeading :small="'Types: ' + typesList" :large='titleName' />
+        <PageHeading :small="'Type: ' + typesList" :large='titleName' />
 
          <div class="tile is-ancestor ml-4 is-mobile p-3">
             <div class='tile is-4' >
